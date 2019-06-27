@@ -12,12 +12,10 @@
  * http://polymer.github.io/PATENTS.txt
  */
 
-import {Adapter as CSSSelectAdapter} from 'css-select';
+import {Adapter as CSSSelectAdapter, Predicate} from 'css-select';
 import {Attribute, Element, Node, TreeAdapter} from 'parse5';
 
 const defaultTreeAdapter = require('parse5/lib/tree-adapters/default');
-
-export type Predicate = (node: Node) => boolean;
 
 /**
  * This is an implementation of the Adapter interface from `css-select` package
@@ -40,7 +38,7 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
     return this.treeAdapter.isElementNode(node);
   }
 
-  existsOne(test: Predicate, elems: Element[]): boolean {
+  existsOne(test: Predicate<Element>, elems: Element[]): boolean {
     return elems.some(test);
   }
 
@@ -97,7 +95,7 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
     return [...filtered];
   }
 
-  findAncestor(test: Predicate, node: Node): Node|undefined {
+  findAncestor(test: Predicate<Node>, node: Node): Node|undefined {
     do {
       node = this.getParent(node);
       if (node) {
@@ -109,13 +107,13 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
     return undefined;
   }
 
-  findAll(test: Predicate, nodes: Node[]): Element[] {
+  findAll(test: Predicate<Node>, nodes: Node[]): Element[] {
     const results: Element[] = [];
     this._findAll(test, nodes, results);
     return results;
   }
 
-  _findAll(test: Predicate, nodes: Node[], results: Element[]) {
+  _findAll(test: Predicate<Node>, nodes: Node[], results: Element[]) {
     for (const node of nodes) {
       if (test(node)) {
         results.push(node);
@@ -124,7 +122,7 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
     }
   }
 
-  findOne(test: Predicate, nodes: Node[]): Element|undefined {
+  findOne(test: Predicate<Node>, nodes: Node[]): Element|undefined {
     for (const node of nodes) {
       if (test(node)) {
         return node as Element;
