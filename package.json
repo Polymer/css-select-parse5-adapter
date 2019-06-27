@@ -1,3 +1,48 @@
 {
-  "name": "css-select-parse5-adapter"
+  "name": "css-select-parse5-adapter",
+  "version": "1.0.0-pre.1",
+  "description": "An adapter for the css-select package for querying trees returned by the parse5 package.",
+  "main": "lib/css-select-parse5-adapter.js",
+  "files": [
+    "lib/*",
+    "!lib/test"
+  ],
+  "scripts": {
+    "build": "npm run lint && npm run format && npm run depcheck && npm run clean && npm run compile",
+    "clean": "rimraf lib",
+    "compile": "tsc",
+    "depcheck": "depcheck --ignore-dirs=lib --ignores=\"rimraf,source-map-support,@types/*\"",
+    "format": "find src -name \"*.ts\" | xargs clang-format --style=file -i",
+    "lint": "tslint -p . --fix",
+    "test": "npm run test:raw --silent | tap-diff",
+    "test:raw": "tape -r source-map-support/register 'lib/test/*.test.js' 'lib/test/**/*.test.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Polymer/css-select-parse5-adapter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Polymer/css-select-parse5-adapter/issues"
+  },
+  "homepage": "https://github.com/Polymer/css-select-parse5-adapter",
+  "keywords": [],
+  "license": "BSD-3-Clause",
+  "author": "The Polymer Project Authors",
+  "dependencies": {
+    "@types/parse5": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.0.10",
+    "@types/tape": "^4.2.33",
+    "clang-format": "^1.2.4",
+    "css-select": "^2.0.2",
+    "depcheck": "^0.8.1",
+    "parse5": "^5.1.0",
+    "rimraf": "^2.6.3",
+    "source-map-support": "^0.5.12",
+    "tap-diff": "^0.1.1",
+    "tape": "^4.10.2",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.2"
+  }
 }

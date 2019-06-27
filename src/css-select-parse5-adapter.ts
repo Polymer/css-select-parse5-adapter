@@ -1,0 +1,94 @@
+import {Adapter as CSSSelectAdapter} from 'css-select';
+import {Attribute, Element, Node, TreeAdapter} from 'parse5';
+const defaultTreeAdapter = require('parse5/lib/tree-adapters/default');
+export type Predicate = (node: Node) => boolean;
+export class Adapter implements CSSSelectAdapter<Node, Element> {
+  treeAdapter: TreeAdapter;
+  constructor(treeAdapter: TreeAdapter) {
+    this.treeAdapter = treeAdapter;
+  }
+  isTag(node: Node): node is Element {
+    return this.treeAdapter.isElementNode(node);
+  }
+  existsOne(test: Predicate, elems: Element[]): boolean {
+    return elems.some(test);
+  }
+  getAncestors(node: Node): Node[] {
+    const parentNode = this.hasParent(node) && this.getParent(node);
+    return parentNode ? [parentNode, ...this.getAncestors(parentNode)] : [];
+  }
+  getAttributeValue(elem: Element, name: string): string {
+    if (!this.isTag(elem)) {
+      return '';
+    }
+    const attrs = this.treeAdapter.getAttrList(elem);
+    for (const attr of attrs) {
+      if (attr.name === name) {
+        return attr.value;
+      }
+    }
+    return '';
+  }
+  getChildren(node: Node): Node[] {
+    return [...(this.treeAdapter.getChildNodes(node) || [])];
+  }
+  getName(elem: Element): string {
+    return this.treeAdapter.getTagName(elem);
+  }
+  getParent(node: Node): Node {
+    return this.treeAdapter.getParentNode(node);
+  }
+  getSiblings(node: Node): Node[] {
+    return this.getChildren(this.getParent(node));
+  }
+  getText(node: Node): string {
+    return this.treeAdapter.isTextNode(node) ?
+        this.treeAdapter.getTextNodeContent(node) :
+        this.getChildren(node).map((node: Node) => this.getText(node)).join('');
+  }
+  hasAttrib(elem: Element, name: string): boolean {
+    return this.isTag(elem) &&
+        this.treeAdapter.getAttrList(elem).some(
+            (attr: Attribute) => attr.name === name);
+  }
+  hasParent(node: Node): boolean {
+    return this.treeAdapter.isTextNode(node) ||
+        this.treeAdapter.isCommentNode(node) ||
+        this.treeAdapter.isElementNode(node) ||
+        this.treeAdapter.isDocumentTypeNode(node);
+  }
+  removeSubsets(nodes: Node[]): Node[] {
+    const filtered: Set<Node> = new Set(nodes);
+    for (const node of filtered) {
+      // Add node to the filtered set
+      if (this.getAncestors(node).some(
+              (ancestor: Node) => filtered.has(ancestor))) {
+        filtered.delete(node);
+      }
+    }
+    return [...filtered];
+  }
+  findAll(test: Predicate, nodes: Node[]): Element[] {
+    const all: Node[] = [];
+    for (const node of nodes) {
+      if (test(node)) {
+        all.push(node);
+      }
+      all.push(...this.findAll(test, this.getChildren(node)));
+    }
+    return all;
+  }
+  findOne(test: Predicate, nodes: Node[]): Element|undefined {
+    for (const node of nodes) {
+      if (test(node)) {
+        return node as Element;
+      }
+      const foundChild = this.findOne(test, this.getChildren(node));
+      if (foundChild) {
+        return foundChild;
+      }
+    }
+    return undefined;
+  }
+}
+export const adapter = new Adapter(defaultTreeAdapter);
