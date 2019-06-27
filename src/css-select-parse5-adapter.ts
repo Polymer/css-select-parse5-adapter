@@ -19,9 +19,19 @@ const defaultTreeAdapter = require('parse5/lib/tree-adapters/default');
 
 export type Predicate = (node: Node) => boolean;
 
+/**
+ * This is an implementation of the Adapter interface from `css-select` package
+ * that is bound to a specific `parse5` `TreeAdapter`.  Unless you need to bind
+ * to a `TreeAdapter` *other than* the `defaultTreeAdapter` from `parse5`,
+ * you'll want the exported `parse5Adapter` instance of this class.
+ */
 export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
   treeAdapter: TreeAdapter;
 
+  /**
+   * @param treeAdapter defines the `TreeAdapter` implementation for `parse5` to
+   *     bind this `css-select` adapter to.
+   */
   constructor(treeAdapter: TreeAdapter) {
     this.treeAdapter = treeAdapter;
   }
@@ -128,4 +138,9 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
   }
 }
 
+/**
+ * This is an instance of the `Parse5Adapter` class which uses the
+ * `defaultTreeAdapter` from `parse5` to manipulate the AST.  This
+ * is most likely what you'll want to import.
+ */
 export const parse5Adapter = new Parse5Adapter(defaultTreeAdapter);
