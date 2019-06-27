@@ -53,7 +53,8 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
     return '';
   }
   getChildren(node: Node): Node[] {
-    return [...(this.treeAdapter.getChildNodes(node) || [])];
+    const children = this.treeAdapter.getChildNodes(node);
+    return children && children.length > 0 ? [...children] : [];
   }
   getName(elem: Element): string {
     return this.treeAdapter.getTagName(elem);
