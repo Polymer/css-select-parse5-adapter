@@ -21,15 +21,19 @@ export type Predicate = (node: Node) => boolean;
 
 export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
   treeAdapter: TreeAdapter;
+
   constructor(treeAdapter: TreeAdapter) {
     this.treeAdapter = treeAdapter;
   }
+
   isTag(node: Node): node is Element {
     return this.treeAdapter.isElementNode(node);
   }
+
   existsOne(test: Predicate, elems: Element[]): boolean {
     return elems.some(test);
   }
+
   getAttributeValue(elem: Element, name: string): string {
     if (!this.isTag(elem)) {
       return '';
@@ -42,29 +46,36 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
     }
     return '';
   }
+
   getChildren(node: Node): Node[] {
     const children = this.treeAdapter.getChildNodes(node);
     return children && children.length > 0 ? [...children] : [];
   }
+
   getName(elem: Element): string {
     return this.treeAdapter.getTagName(elem);
   }
+
   getParent(node: Node): Node {
     return this.treeAdapter.getParentNode(node);
   }
+
   getSiblings(node: Node): Node[] {
     return this.getChildren(this.getParent(node));
   }
+
   getText(node: Node): string {
     return this.treeAdapter.isTextNode(node) ?
         this.treeAdapter.getTextNodeContent(node) :
         this.getChildren(node).map((node: Node) => this.getText(node)).join('');
   }
+
   hasAttrib(elem: Element, name: string): boolean {
     return this.isTag(elem) &&
         this.treeAdapter.getAttrList(elem).some(
             (attr: Attribute) => attr.name === name);
   }
+
   removeSubsets(nodes: Node[]): Node[] {
     const filtered: Set<Node> = new Set(nodes);
     for (const node of [...filtered]) {
@@ -75,6 +86,7 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
     }
     return [...filtered];
   }
+
   findAncestor(test: Predicate, node: Node): Node|undefined {
     do {
       node = this.getParent(node);
@@ -86,11 +98,13 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
     } while (node);
     return undefined;
   }
+
   findAll(test: Predicate, nodes: Node[]): Element[] {
     const results: Element[] = [];
     this._findAll(test, nodes, results);
     return results;
   }
+
   _findAll(test: Predicate, nodes: Node[], results: Element[]) {
     for (const node of nodes) {
       if (test(node)) {
@@ -99,6 +113,7 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
       this._findAll(test, this.getChildren(node), results);
     }
   }
+
   findOne(test: Predicate, nodes: Node[]): Element|undefined {
     for (const node of nodes) {
       if (test(node)) {
