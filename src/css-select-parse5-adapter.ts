@@ -87,24 +87,13 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
   removeSubsets(nodes: Node[]): Node[] {
     const filtered: Set<Node> = new Set(nodes);
     for (const node of [...filtered]) {
-      if (this.findAncestor((ancestor: Node) => filtered.has(ancestor), node)) {
+      if (this._findAncestor(
+              (ancestor: Node) => filtered.has(ancestor), node)) {
         filtered.delete(node);
         continue;
       }
     }
     return [...filtered];
-  }
-
-  findAncestor(test: Predicate<Node>, node: Node): Node|undefined {
-    do {
-      node = this.getParent(node);
-      if (node) {
-        if (test(node)) {
-          return node;
-        }
-      }
-    } while (node);
-    return undefined;
   }
 
   findAll(test: Predicate<Node>, nodes: Node[]): Element[] {
@@ -132,6 +121,18 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
         return foundChild;
       }
     }
+    return undefined;
+  }
+
+  _findAncestor(test: Predicate<Node>, node: Node): Node|undefined {
+    do {
+      node = this.getParent(node);
+      if (node) {
+        if (test(node)) {
+          return node;
+        }
+      }
+    } while (node);
     return undefined;
   }
 }
