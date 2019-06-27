@@ -1,8 +1,25 @@
+/**
+ * @license
+ * Copyright (c) 2019 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at
+ * http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at
+ * http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at
+ * http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at
+ * http://polymer.github.io/PATENTS.txt
+ */
+
 import {Adapter as CSSSelectAdapter} from 'css-select';
 import {Attribute, Element, Node, TreeAdapter} from 'parse5';
+
 const defaultTreeAdapter = require('parse5/lib/tree-adapters/default');
+
 export type Predicate = (node: Node) => boolean;
-export class Adapter implements CSSSelectAdapter<Node, Element> {
+
+export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
   treeAdapter: TreeAdapter;
   constructor(treeAdapter: TreeAdapter) {
     this.treeAdapter = treeAdapter;
@@ -91,4 +108,5 @@ export class Adapter implements CSSSelectAdapter<Node, Element> {
     return undefined;
   }
 }
-export const adapter = new Adapter(defaultTreeAdapter);
+
+export const parse5Adapter = new Parse5Adapter(defaultTreeAdapter);
