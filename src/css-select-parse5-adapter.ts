@@ -31,8 +31,14 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
     return elems.some(test);
   }
   getAncestors(node: Node): Node[] {
-    const parentNode = this.hasParent(node) && this.getParent(node);
-    return parentNode ? [parentNode, ...this.getAncestors(parentNode)] : [];
+    const ancestors: Node[] = [];
+    do {
+      node = this.getParent(node);
+      if (node) {
+        ancestors.push(node);
+      }
+    } while (node);
+    return ancestors;
   }
   getAttributeValue(elem: Element, name: string): string {
     if (!this.isTag(elem)) {
@@ -67,12 +73,6 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
     return this.isTag(elem) &&
         this.treeAdapter.getAttrList(elem).some(
             (attr: Attribute) => attr.name === name);
-  }
-  hasParent(node: Node): boolean {
-    return this.treeAdapter.isTextNode(node) ||
-        this.treeAdapter.isCommentNode(node) ||
-        this.treeAdapter.isElementNode(node) ||
-        this.treeAdapter.isDocumentTypeNode(node);
   }
   removeSubsets(nodes: Node[]): Node[] {
     const filtered: Set<Node> = new Set(nodes);
