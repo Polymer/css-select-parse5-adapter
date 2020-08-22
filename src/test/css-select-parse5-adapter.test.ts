@@ -32,7 +32,7 @@ const HTML = `
 </html>
 `;
 
-const AST = parse(HTML, {sourceCodeLocationInfo: true});
+const AST = parse(HTML);
 
 test('Lets try some selectors', (t) => {
   t.plan(5);
