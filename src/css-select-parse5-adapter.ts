@@ -111,7 +111,7 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
     }
   }
 
-  findOne(test: Predicate<Node>, nodes: Node[]): Element|undefined {
+  findOne(test: Predicate<Element>, nodes: Node[]): Element|null {
     for (const node of nodes) {
       if (test(node)) {
         return node as Element;
@@ -121,7 +121,7 @@ export class Parse5Adapter implements CSSSelectAdapter<Node, Element> {
         return foundChild;
       }
     }
-    return undefined;
+    return null;
   }
 
   _findAncestor(test: Predicate<Node>, node: Node): Node|undefined {
