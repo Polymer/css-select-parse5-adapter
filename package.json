@@ -35,7 +35,7 @@
     "@types/node": "^12.0.10",
     "@types/tape": "^4.2.33",
     "clang-format": "^1.2.4",
-    "css-select": "^2.0.2",
+    "css-select": "^4.2.1",
     "depcheck": "^0.8.1",
     "parse5": "^5.1.0",
     "rimraf": "^2.6.3",
@@ -43,6 +43,6 @@
     "tap-diff": "^0.1.1",
     "tape": "^4.10.2",
     "tslint": "^5.18.0",
-    "typescript": "^3.5.2"
+    "typescript": "^4.5.4"
   }
 }
