@@ -12,7 +12,7 @@
  * http://polymer.github.io/PATENTS.txt
  */
 
-import {Adapter as CSSSelectAdapter, Predicate} from 'css-select';
+import {Adapter as CSSSelectAdapter, Predicate} from 'css-select/lib/types';
 import {Attribute, Element, Node, TreeAdapter} from 'parse5';
 
 const defaultTreeAdapter = require('parse5/lib/tree-adapters/default');
